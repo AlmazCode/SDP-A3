@@ -1,0 +1,51 @@
+digraph LabInstructions {
+  graph [rankdir=TB, bgcolor="white", pad=0.25, nodesep=0.35, ranksep=0.65, fontname="Arial"];
+  node [shape=record, style="rounded,filled", fillcolor="#f8fafc", color="#64748b", fontname="Arial", fontsize=10];
+  edge [color="#475569", arrowsize=0.7, fontname="Arial", fontsize=9];
+
+  Instruction [label="{«abstract» Instruction|− output: InstructionOutput|+ issue(stationCode, text)}", fillcolor="#dbeafe"];
+  RoutineInstruction [label="{RoutineInstruction|+ issue(stationCode, text)}"];
+  EmergencyInstruction [label="{EmergencyInstruction|+ issue(stationCode, text)}"];
+  InstructionOutput [label="{«interface» InstructionOutput|+ publish(message)}", fillcolor="#dcfce7"];
+  PanelOutput [label="{PanelOutput|+ publish(message)}"];
+  LabelOutput [label="{LabelOutput|+ publish(message)}"];
+  LegacyTerminalAdapter [label="{LegacyTerminalAdapter|− terminal: LegacyTerminal|+ publish(message)}", fillcolor="#fef3c7"];
+  LegacyTerminal [label="{LegacyTerminal|+ sendCommand(station: int, payload: byte[], urgency: char): int|+ OK, BAD_STATION, QUEUE_FULL, OFFLINE}", fillcolor="#fee2e2"];
+  InstructionMessage [label="{InstructionMessage|stationCode: String; body: String; priority: Priority}"];
+  Priority [label="{«enum» Priority|NORMAL; URGENT}"];
+  DeliveryException [label="{DeliveryException|reason: Reason}"];
+
+  InstructionDispatcher [label="{InstructionDispatcher|− instructions: Map; − outputs: Map|+ dispatch(request)}", fillcolor="#e0e7ff"];
+  InstructionRequest [label="{InstructionRequest|kind; destination; stationCode; text}"];
+  InstructionProvider [label="{«interface» InstructionProvider|+ kind(); + create(output)}", fillcolor="#dcfce7"];
+  OutputProvider [label="{«interface» OutputProvider|+ destination(); + create()}", fillcolor="#dcfce7"];
+  RoutineProvider [label="RoutineProvider"];
+  EmergencyProvider [label="EmergencyProvider"];
+  PanelProvider [label="PanelProvider"];
+  LabelProvider [label="LabelProvider"];
+  LegacyProvider [label="LegacyProvider"];
+  Main [label="{Main|+ main(args)}"];
+
+  RoutineInstruction -> Instruction [arrowhead=empty];
+  EmergencyInstruction -> Instruction [arrowhead=empty];
+  Instruction -> InstructionOutput [arrowhead=vee, label="holds"];
+  PanelOutput -> InstructionOutput [arrowhead=empty, style=dashed];
+  LabelOutput -> InstructionOutput [arrowhead=empty, style=dashed];
+  LegacyTerminalAdapter -> InstructionOutput [arrowhead=empty, style=dashed];
+  LegacyTerminalAdapter -> LegacyTerminal [arrowhead=vee, label="wraps"];
+  InstructionOutput -> InstructionMessage [arrowhead=vee, style=dotted];
+  InstructionMessage -> Priority [arrowhead=vee, style=dotted];
+  InstructionOutput -> DeliveryException [arrowhead=vee, style=dotted, label="throws"];
+
+  Main -> InstructionDispatcher [arrowhead=vee];
+  InstructionDispatcher -> InstructionRequest [arrowhead=vee, style=dotted];
+  InstructionDispatcher -> InstructionProvider [arrowhead=vee, label="selects by kind"];
+  InstructionDispatcher -> OutputProvider [arrowhead=vee, label="selects by destination"];
+  InstructionProvider -> Instruction [arrowhead=vee, style=dotted, label="creates"];
+  OutputProvider -> InstructionOutput [arrowhead=vee, style=dotted, label="creates"];
+  RoutineProvider -> InstructionProvider [arrowhead=empty, style=dashed];
+  EmergencyProvider -> InstructionProvider [arrowhead=empty, style=dashed];
+  PanelProvider -> OutputProvider [arrowhead=empty, style=dashed];
+  LabelProvider -> OutputProvider [arrowhead=empty, style=dashed];
+  LegacyProvider -> OutputProvider [arrowhead=empty, style=dashed];
+}
