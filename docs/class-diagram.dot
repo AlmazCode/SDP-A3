@@ -48,4 +48,9 @@ digraph LabInstructions {
   PanelProvider -> OutputProvider [arrowhead=empty, style=dashed];
   LabelProvider -> OutputProvider [arrowhead=empty, style=dashed];
   LegacyProvider -> OutputProvider [arrowhead=empty, style=dashed];
+  RoutineProvider -> RoutineInstruction [arrowhead=vee, style=dotted, color="#94a3b8"];
+  EmergencyProvider -> EmergencyInstruction [arrowhead=vee, style=dotted, color="#94a3b8"];
+  PanelProvider -> PanelOutput [arrowhead=vee, style=dotted, color="#94a3b8"];
+  LabelProvider -> LabelOutput [arrowhead=vee, style=dotted, color="#94a3b8"];
+  LegacyProvider -> LegacyTerminalAdapter [arrowhead=vee, style=dotted, color="#94a3b8"];
 }

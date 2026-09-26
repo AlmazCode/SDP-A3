@@ -2,8 +2,10 @@ package lab.instructions;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ServiceLoader;
 import lab.instructions.legacy.LegacyTerminal;
@@ -60,6 +62,21 @@ class InstructionDispatcherTest {
                 .map(p -> p.get().kind()).sorted().toList());
         assertEquals(List.of("label", "legacy", "panel"), ServiceLoader.load(OutputProvider.class).stream()
                 .map(p -> p.get().destination()).sorted().toList());
+    }
+
+    @Test void discoveredLegacyProviderDeliversThroughTheAdapter() throws DeliveryException {
+        PrintStream original = System.out;
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try {
+            System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
+            InstructionDispatcher dispatcher = new InstructionDispatcher(
+                    ServiceLoader.load(InstructionProvider.class).stream().map(p -> p.get()).toList(),
+                    ServiceLoader.load(OutputProvider.class).stream().map(p -> p.get()).toList());
+            dispatcher.dispatch(new InstructionRequest("emergency", "legacy", "7", "Close fume hood"));
+        } finally {
+            System.setOut(original);
+        }
+        assertEquals("[TERMINAL 7] U | EMERGENCY: Close fume hood\n", bytes.toString(StandardCharsets.UTF_8));
     }
 
     private static InstructionProvider provider(String kind, java.util.function.Function<InstructionOutput, Instruction> creator) {
