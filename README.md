@@ -2,12 +2,12 @@
 
 Assignment 3: Bridge and Adapter in one laboratory instruction workflow.
 
-## Build and test
+## Build
 
-Requires Java 17+ and Maven. One command compiles the project and runs all JUnit 5 tests:
+Requires Java 17+ and Maven. Build with one command:
 
 ```bash
-mvn test
+mvn package
 ```
 
 ## Run
@@ -31,6 +31,5 @@ Kinds: `routine`, `emergency`. Destinations: `panel`, `label`, `legacy`. The leg
 
 - [Design rationale](docs/design-rationale.md) explains both patterns, the chosen complexity module, and a limitation.
 - [UML class diagram](docs/class-diagram.svg) shows the code's classes and relationships.
-- `src/test/java` contains JUnit 5 tests for delegation, runtime selection, and adapter failures.
 
 To add an instruction kind, add a subclass of `Instruction` and an `InstructionProvider`, then register the provider in `META-INF/services/lab.instructions.InstructionProvider`. To add an output, implement `InstructionOutput` and `OutputProvider` and register it in the corresponding service descriptor. Existing Java classes need no changes.

@@ -14,6 +14,6 @@ The simulated vendor class `LegacyTerminal` is kept separate in `lab.instruction
 
 **Chosen module: dynamic implementor selection.** `InstructionRequest.destination` determines the output at runtime. `InstructionDispatcher` looks it up among `OutputProvider` instances discovered by `ServiceLoader`; the client supplies destination data, not an output class. The adapted terminal is selected by `legacy` in exactly the same path as the other outputs. The request's `kind` similarly selects an `InstructionProvider`. A new instruction variant or output needs new classes and a service descriptor entry, with no edit to existing Java classes. This is the Open/Closed Principle on both Bridge axes.
 
-## Verification and limitation
+## Limitation
 
-JUnit 5 tests use recording outputs to verify both refined abstractions, a stub terminal to verify native argument conversion and every status mapping, and provider tests to verify runtime selection. Panel and label endpoints and the vendor terminal are simulated with output streams; physical device protocols and delivery acknowledgements are outside this project.
+Panel and label endpoints and the vendor terminal are simulated with output streams; physical device protocols and delivery acknowledgements are outside this project.
