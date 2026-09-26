@@ -2,12 +2,12 @@
 
 Assignment 3: Bridge and Adapter in one laboratory instruction workflow.
 
-## Build
+## Build and test
 
-Requires Java 17+ and Maven. Build with one command:
+Requires Java 17+ and Maven. Run the JUnit 5 tests with:
 
 ```bash
-mvn package
+mvn test
 ```
 
 ## Run
